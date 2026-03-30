@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { 
   IonHeader, 
   IonToolbar, 
@@ -46,26 +46,27 @@ import { RouterModule } from '@angular/router';
     IonBadge
   ],
 })
-export class HomePage {
+export class HomePage implements OnInit{
   private movieService = inject(MovieService);
   private currentPage = 1;
   public error = null;
-  public isLoading = false;
+  public isLoading = true;
   public movies: MovieResult[] = [];
   public imageBaseUrl = 'https://image.tmdb.org/t/p';
   public dummyArray = new Array(5);
 
-  constructor() {
+  ngOnInit() {
     this.loadMovies();
   }
 
-  loadMovies(event?: InfiniteScrollCustomEvent){
+  async loadMovies(event?: InfiniteScrollCustomEvent){
     this.error = null;
     
     if (!event) {
       this.isLoading = true;
     }
 
+    // Get the next page of movies from the MovieService
     this.movieService.getTopRatedMovies(this.currentPage).pipe(
       finalize(() => {
         this.isLoading = false;

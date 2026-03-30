@@ -66,8 +66,6 @@ export class DetailsPage {
   // Load the movie details when the id changes through the URL :id parameter
   @Input()
   set id(movieId: string) {
-    // This is just to show Signal usage
-    // You could also just assign the value to a variable directly
     this.movieService.getMovieDetails(movieId).subscribe((movie) => {
       this.movie.set(movie);
     });

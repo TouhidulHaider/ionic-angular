@@ -1,20 +1,106 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { Component, OnInit, inject } from '@angular/core';
+import { 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  InfiniteScrollCustomEvent, 
+  IonList,
+  IonItem,
+  IonSkeletonText,
+  IonAvatar,
+  IonAlert,
+  IonLabel,
+  IonBadge,
+  IonLoading,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+} from '@ionic/angular/standalone';
+import { MovieService } from '../services/movie';
+import { catchError, finalize } from 'rxjs';
+import { MovieResult } from '../services/interfaces';
+import { DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home-defer',
   templateUrl: './home-defer.page.html',
   styleUrls: ['./home-defer.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    IonLabel,
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonContent,
+    IonList,
+    IonItem,
+    IonLoading,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+    IonSkeletonText,
+    IonAvatar,
+    IonAlert,
+    DatePipe,
+    RouterModule,
+    IonBadge
+  ],
 })
-export class HomeDeferPage implements OnInit {
-
-  constructor() { }
+export class HomeDeferPage implements OnInit{
+  private movieService = inject(MovieService);
+  private currentPage = 1;
+  public error = null;
+  public isLoading = true;
+  public movies: MovieResult[] = [];
+  public imageBaseUrl = 'https://image.tmdb.org/t/p';
+  public dummyArray = new Array(5);
 
   ngOnInit() {
+    this.loadMovies();
   }
 
+  async loadMovies(event?: InfiniteScrollCustomEvent){
+    this.error = null;
+    
+    if (!event) {
+      this.isLoading = true;
+    }
+
+    // Get the next page of movies from the MovieService
+    this.movieService.getTopRatedMovies(this.currentPage).pipe(
+      finalize(() => {
+        this.isLoading = false;
+        if (event) {
+          event.target.complete();
+        }
+      }),
+      catchError((err: any) => {
+        console.log(err);
+        this.error = err.error.status_message;
+        return [];
+      })
+    )
+    .subscribe({
+      next: (res) => {
+        console.log(res);
+        // Append the results to our movies array
+        this.movies.push(...res.results);
+
+        // Resolve the infinite scroll promise to tell Ionic that we are done
+        event?.target.complete();
+
+        // Disable the infinite scroll when we reach the end of the list
+        if (event) {
+          event.target.disabled = res.total_pages === this.currentPage;
+        }
+      },
+    });
+  }
+
+  // This method is called by the infinite scroll event handler
+  loadMore(event: InfiniteScrollCustomEvent) {
+    this.currentPage++;
+    this.loadMovies(event);
+  }
 }
+

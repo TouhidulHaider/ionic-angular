@@ -10,12 +10,17 @@ import {
   IonSkeletonText,
   IonAvatar,
   IonAlert,
-  IonLabel
+  IonLabel,
+  IonBadge,
+  IonLoading,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from '@ionic/angular/standalone';
 import { MovieService } from '../services/movie';
 import { catchError, finalize } from 'rxjs';
 import { MovieResult } from '../services/interfaces';
 import { DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -30,10 +35,15 @@ import { DatePipe } from '@angular/common';
     IonContent,
     IonList,
     IonItem,
+    IonLoading,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
     IonSkeletonText,
     IonAvatar,
     IonAlert,
-    DatePipe
+    DatePipe,
+    RouterModule,
+    IonBadge
   ],
 })
 export class HomePage {

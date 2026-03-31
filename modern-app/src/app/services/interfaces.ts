@@ -20,12 +20,12 @@ export interface MovieResult {
   overview: string;
   popularity: number;
   poster_path: string;
-  production_companies: Productioncompany[];
-  production_countries: Productioncountry[];
+  production_companies: ProductionCompany[];
+  production_countries: ProductionCountry[];
   release_date: string;
   revenue: number;
   runtime: number;
-  spoken_languages: Spokenlanguage[];
+  spoken_languages: SpokenLanguage[];
   status: string;
   tagline: string;
   title: string;
@@ -34,18 +34,18 @@ export interface MovieResult {
   vote_count: number;
 }
 
-interface Spokenlanguage {
+interface SpokenLanguage {
   english_name: string;
   iso_639_1: string;
   name: string;
 }
 
-interface Productioncountry {
+interface ProductionCountry {
   iso_3166_1: string;
   name: string;
 }
 
-interface Productioncompany {
+interface ProductionCompany {
   id: number;
   logo_path?: string;
   name: string;

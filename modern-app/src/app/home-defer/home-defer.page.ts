@@ -12,7 +12,6 @@ import {
   IonAlert,
   IonLabel,
   IonBadge,
-  IonLoading,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
 } from '@ionic/angular/standalone';
@@ -35,7 +34,6 @@ import { RouterModule } from '@angular/router';
     IonContent,
     IonList,
     IonItem,
-    IonLoading,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonSkeletonText,
